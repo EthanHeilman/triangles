@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="canvas" width="800" height="800" style="border:1px solid #000000;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script type="text/javascript">
+
+
+function Triangle(x, y, height, width){
+	this.x = x;
+	this.y = y;
+	this.height = height;
+	this.width = width;
+}
+
+
+function drawTriangle(ctx, x, y, height, width){
+	ctx.fillStyle = "red";
+
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.lineTo(x-width/2, y+height);
+
+	ctx.lineTo(x+width/2, y+height);
+	ctx.fill();
+}
+
+
+
+function render() {
+
+	var ctx = document.getElementById('canvas').getContext('2d');
+
+	var max_depth = 8; 
+
+	var step_height = 25;
+	var tri_height = max_depth*step_height;
+	var tri_width = tri_height;
+
+	var peak_x = 400;
+	var peak_y = 0;
+
+	var stack = [];
+
+	var width = step_height;
+
+	var depth = function (y){ return y/step_height; }
+
+	dist_to_base = (tri_height-peak_y);
+	base_width = tri_width/Math.pow(2,depth(peak_y));
+	ext_width_length = (base_width/dist_to_base)*step_height;
+	console.log(base_width, ext_width_length);
+
+
+	var pinnacle = new Triangle(peak_x, peak_y, step_height, ext_width_length);
+
+	stack.push(pinnacle);
+
+	while ( stack.length > 0){
+
+		t = stack.pop(0);
+
+		drawTriangle(ctx, t.x, t.y, t.height, t.width);
+
+		x =  t.x-t.width/2;
+		y =  t.y+step_height;
+
+		dist_to_base = (tri_height-y);
+		base_width = tri_width/Math.pow(2,depth(y));
+		ext_width_length = (base_width/dist_to_base)*step_height;
+
+
+
+		t_left = new Triangle(x, y, step_height, ext_width_length ); 
+
+		if( depth(y) < max_depth ) stack.push(t_left);
+
+		x =  t.x+t.width/2;
+
+		t_right = new Triangle(x, y, step_height, ext_width_length);
+
+		if( depth(y) < max_depth ) stack.push(t_right);
+		
+	}
+
+	// stack.push( (next_x, next_y, step_height, next_width) );
+
+	// console.log(stack[0]);	
+
+
+	// drawTriangle(ctx, next_x, next_y, step_height, next_width);
+
+
+
+
+} 
+render();
+
+</script>
+
+
+</body>
+</html>
