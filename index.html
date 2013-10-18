@@ -2,102 +2,151 @@
 <html>
 <body>
 
-<canvas id="canvas" width="800" height="800" style="border:1px solid #000000;">
+<canvas id="canvas" width="5000" height="5000" style="border:1px solid #000000;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
 <script type="text/javascript">
 
-
-function Triangle(x, y, height, width){
+function P(x, y){
 	this.x = x;
 	this.y = y;
-	this.height = height;
-	this.width = width;
 }
 
 
-function drawTriangle(ctx, x, y, height, width){
-	ctx.fillStyle = "red";
+function Triangle(top, left, right){
+	this.top = top;
+	this.left = left;
+	this.right = right;
 
-	ctx.beginPath();
-	ctx.moveTo(x, y);
-	ctx.lineTo(x-width/2, y+height);
+	this.m = function(side){
+		rise = this[side].y - this.top.y;
+		run = this[side].x - this.top.x;
+		return rise/run;
+	};
 
-	ctx.lineTo(x+width/2, y+height);
-	ctx.fill();
-}
+	// Right slope
+	this.right_m = function(){ return this.m("right"); };
 
+	// Left slope
+	this.left_m = function(){ return this.m("left"); };
 
+	this.b = function(side){
+		return this[side].y - this.m(side)*this[side].x;
+	};
 
-function render() {
+	// Right y-intercept
+	this.right_b = function(){ return this.b("right"); };
 
-	var ctx = document.getElementById('canvas').getContext('2d');
-
-	var max_depth = 8; 
-
-	var step_height = 25;
-	var tri_height = max_depth*step_height;
-	var tri_width = tri_height;
-
-	var peak_x = 400;
-	var peak_y = 0;
-
-	var stack = [];
-
-	var width = step_height;
-
-	var depth = function (y){ return y/step_height; }
-
-	dist_to_base = (tri_height-peak_y);
-	base_width = tri_width/Math.pow(2,depth(peak_y));
-	ext_width_length = (base_width/dist_to_base)*step_height;
-	console.log(base_width, ext_width_length);
+	// left y-intercept
+	this.left_b = function(){ return this.b("left"); };
 
 
-	var pinnacle = new Triangle(peak_x, peak_y, step_height, ext_width_length);
+	this.inner = function(height){
+		var bottom_x = this.left.x + Math.abs(this.left.x - this.right.x)/2;
+		var bottom_y = this.right.y;
 
-	stack.push(pinnacle);
+		var from_peak_y = this.top.y + height;
 
-	while ( stack.length > 0){
-
-		t = stack.pop(0);
-
-		drawTriangle(ctx, t.x, t.y, t.height, t.width);
-
-		x =  t.x-t.width/2;
-		y =  t.y+step_height;
-
-		dist_to_base = (tri_height-y);
-		base_width = tri_width/Math.pow(2,depth(y));
-		ext_width_length = (base_width/dist_to_base)*step_height;
+		var isect_left_x = (from_peak_y - this.left_b() )/this.left_m(); 
+		if ( ! isFinite( this.left_m() ) ) isect_left_x = this.top.x;
 
 
+		var isect_right_x =(from_peak_y - this.right_b() )/this.right_m(); 
+		if ( ! isFinite( this.right_m() ) ) isect_right_x = this.top.x;
 
-		t_left = new Triangle(x, y, step_height, ext_width_length ); 
 
-		if( depth(y) < max_depth ) stack.push(t_left);
+		var left = new P(isect_left_x, from_peak_y);
+		var right = new P(isect_right_x, from_peak_y);
+		var bottom = new P(bottom_x, bottom_y);
 
-		x =  t.x+t.width/2;
-
-		t_right = new Triangle(x, y, step_height, ext_width_length);
-
-		if( depth(y) < max_depth ) stack.push(t_right);
-		
+		return new Triangle(bottom, left, right);
 	}
 
-	// stack.push( (next_x, next_y, step_height, next_width) );
+	this.split = function(height){
+		var inner = this.inner(height);
 
-	// console.log(stack[0]);	
+		var left_t = new Triangle(inner.left, this.left, inner.top);
+		var right_t = new Triangle(inner.right, inner.top, this.right);
+
+		return [left_t, right_t]
+	}
+}
 
 
-	// drawTriangle(ctx, next_x, next_y, step_height, next_width);
+function Render(){
+	this.ctx = document.getElementById('canvas').getContext('2d');
+
+	this.drawTriangle = function(t, color){
+		var ctx = this.ctx;
+		ctx.fillStyle = color;//"red";
+		ctx.beginPath();
+		ctx.moveTo(t.top.x, t.top.y);
+		ctx.lineTo(t.left.x, t.left.y);
+		ctx.lineTo(t.right.x, t.right.y);
+
+		ctx.lineTo(t.top.x, t.top.y);
+		ctx.fill();
+	};
+}
+
+
+// var t_side_len = 600;
+// var x_trans = 300;
+// var t_height = Math.sqrt( Math.pow(t_side_len,2) - Math.pow(t_side_len/2, 2) );
+// var t = new Triangle( new P(t_side_len/2 +x_trans,0), new P(0+x_trans,t_height), new P(t_side_len+x_trans, t_height) );
+
+var y_step = 300;
+var max_depth = 8;
+var t_height = y_step*max_depth;
+var t_side_len = Math.sqrt( 3/4*Math.pow(t_height,2) );
+var x_trans = 300;
+var t = new Triangle( new P(t_side_len/2 +x_trans,0), new P(0+x_trans,t_height), new P(t_side_len+x_trans, t_height) );
+
+
+// var t = new Triangle( new P(400,0), new P(0,400), new P(350, 400) );
+
+var r = new Render();
+
+var stack = []
+stack.push(t);
+
+for(var level = 0; level < max_depth; level+=1){
+
+	var new_stack = [];
+	while(stack.length > 0){
+		var t = stack.pop();
+		r.drawTriangle(t, "orange");
+		r.drawTriangle(t.inner(y_step), "green");
+
+		new_stack.push.apply(new_stack, t.split(y_step));
+	}
+
+	stack.push.apply(stack, new_stack);
+}
+
+
+// var sub_t= t.split(50);
+
+// var l_t = sub_t[0];
+// var r_t = sub_t[1];
 
 
 
 
-} 
-render();
+// r.drawTriangle(t, "orange");
+
+// console.log(t.inner(50));
+// r.drawTriangle(t.inner(50), "white");
+
+// console.log(l_t);
+// // r.drawTriangle(l_t, "blue");
+// // r.drawTriangle(l_t.inner(50), "white");
+// // r.drawTriangle(l_t.split(50)[1].inner(50), "white");
+// // r.drawTriangle(l_t.split(50)[1].split(50)[1], "blue");
+
+// r.drawTriangle(r_t, "green");
+// r.drawTriangle(r_t.inner(50), "white");
 
 </script>
 
