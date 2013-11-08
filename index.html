@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<canvas id="canvas" width="5000" height="5000" style="border:1px solid #000000;">
+<canvas id="canvas" width="1200" height="800" style="border:1px solid #000000;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
@@ -60,6 +60,8 @@ function Triangle(top, left, right){
 		var right = new P(isect_right_x, from_peak_y);
 		var bottom = new P(bottom_x, bottom_y);
 
+
+
 		return new Triangle(bottom, left, right);
 	}
 
@@ -77,8 +79,23 @@ function Triangle(top, left, right){
 function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
-	this.drawTriangle = function(t, color){
+	this.drawTriangleOutline = function(t){
 		var ctx = this.ctx;
+
+		//ctx.fillStyle = color;//"red";
+		ctx.beginPath();
+		ctx.moveTo(t.top.x, t.top.y);
+		ctx.lineTo(t.left.x, t.left.y);
+		ctx.lineTo(t.right.x, t.right.y);
+
+		ctx.lineTo(t.top.x, t.top.y);
+		ctx.stroke();
+		//ctx.fill();
+	};
+
+	this.drawTriangleFill = function(t, color){
+		var ctx = this.ctx;
+
 		ctx.fillStyle = color;//"red";
 		ctx.beginPath();
 		ctx.moveTo(t.top.x, t.top.y);
@@ -86,67 +103,132 @@ function Render(){
 		ctx.lineTo(t.right.x, t.right.y);
 
 		ctx.lineTo(t.top.x, t.top.y);
+		ctx.stroke();
 		ctx.fill();
+	};
+
+	this.drawCircleFill = function(point, color){
+		var ctx = this.ctx;
+		var radius = 2;
+
+		ctx.beginPath();
+		ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI, false);
+		ctx.fillStyle = color;
+		ctx.fill();
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = color;
+		ctx.stroke();
+	};
+
+
+
+	this.drawCircleOutline =  function(point){
+		var ctx = this.ctx;
+
+		var radius = 2;
+
+		ctx.beginPath();
+		ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI, false);
+
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = color;
+		ctx.stroke();
 	};
 }
 
 
-// var t_side_len = 600;
-// var x_trans = 300;
-// var t_height = Math.sqrt( Math.pow(t_side_len,2) - Math.pow(t_side_len/2, 2) );
-// var t = new Triangle( new P(t_side_len/2 +x_trans,0), new P(0+x_trans,t_height), new P(t_side_len+x_trans, t_height) );
+function buildTriangles(){
+	var y_step = 50;
+	var max_depth = 8;
+	var t_height = y_step*max_depth;
+	var width = 10;
+	var t_side_len = Math.sqrt( width*3/4*Math.pow(t_height,2) );
+	var x_trans = 50;
+	var y_trans = 50;
 
-var y_step = 300;
-var max_depth = 8;
-var t_height = y_step*max_depth;
-var t_side_len = Math.sqrt( 3/4*Math.pow(t_height,2) );
-var x_trans = 300;
-var t = new Triangle( new P(t_side_len/2 +x_trans,0), new P(0+x_trans,t_height), new P(t_side_len+x_trans, t_height) );
+	var t = new Triangle( new P(t_side_len/2 +x_trans, y_trans), new P(0+x_trans,t_height+y_trans), new P(t_side_len+x_trans, t_height+y_trans) );
 
 
-// var t = new Triangle( new P(400,0), new P(0,400), new P(350, 400) );
+	var stack = []
+	stack.push(t);
 
-var r = new Render();
+	var triangles = [];
 
-var stack = []
-stack.push(t);
+	for(var level = 0; level < max_depth; level+=1){
 
-for(var level = 0; level < max_depth; level+=1){
+		var new_stack = [];
+		while(stack.length > 0){
+			var t = stack.pop();
 
-	var new_stack = [];
-	while(stack.length > 0){
-		var t = stack.pop();
-		r.drawTriangle(t, "orange");
-		r.drawTriangle(t.inner(y_step), "green");
+			var scaling_factor = 1;
+			//var scaling_factor = (level+1)/2.5; //can not be zero
+			
+			var inner = t.inner(y_step/(scaling_factor));
+			var drawable_triangle =  new Triangle(t.top ,inner.left, inner.right);
 
-		new_stack.push.apply(new_stack, t.split(y_step));
+			triangles.push(drawable_triangle); //save for later
+
+			new_stack.push.apply(new_stack, t.split( y_step/(scaling_factor) ) );
+		}
+
+		stack.push.apply(stack, new_stack);
 	}
 
-	stack.push.apply(stack, new_stack);
+	return triangles;
+}
+
+function Downgrade(prefix, maxlen, type){
+	this.prefix = prefix;
+	this.maxlen = maxlen;
+	this.type = type;
+
+	console.assert( type == "V2U" || type == "U2I" || type == "V2I");
+
 }
 
 
-// var sub_t= t.split(50);
-
-// var l_t = sub_t[0];
-// var r_t = sub_t[1];
-
+function getQueryString(){
+	return location.search;
+}
 
 
+var r = new Render();
+var triangles = buildTriangles();
 
-// r.drawTriangle(t, "orange");
+console.log(getQueryString());
 
-// console.log(t.inner(50));
-// r.drawTriangle(t.inner(50), "white");
 
-// console.log(l_t);
-// // r.drawTriangle(l_t, "blue");
-// // r.drawTriangle(l_t.inner(50), "white");
-// // r.drawTriangle(l_t.split(50)[1].inner(50), "white");
-// // r.drawTriangle(l_t.split(50)[1].split(50)[1], "blue");
 
-// r.drawTriangle(r_t, "green");
-// r.drawTriangle(r_t.inner(50), "white");
+var downgrades = {};
+var downgrade =  new Downgrade(1, 1, "V2U");
+downgrades[ downgrade.prefix ] = downgrade;
+var downgrade =  new Downgrade(2, 1, "U2I");
+downgrades[ downgrade.prefix ] = downgrade;
+var downgrade =  new Downgrade(4, 1, "V2I");
+downgrades[ downgrade.prefix ] = downgrade;
+
+
+for (var t in triangles){
+
+	// console.log(t);
+	// console.log(downgrade.prefix);
+	if (t in downgrades &&  downgrades[t].type == "V2U"){
+		r.drawTriangleFill(triangles[t], "#848484");
+	} else 	if (t in downgrades &&  downgrades[t].type == "U2I"){
+		r.drawTriangleFill(triangles[t], "#BDBDBD");
+
+	} else 	if (t in downgrades &&  downgrades[t].type == "V2I"){
+		r.drawTriangleFill(triangles[t], "#2E2E2E");
+
+	} else {
+		r.drawTriangleOutline(triangles[t] );
+	}
+
+	r.drawCircleFill( triangles[t].top, "grey" );
+
+} 
+
+
 
 </script>
 
