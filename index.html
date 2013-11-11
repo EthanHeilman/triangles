@@ -177,9 +177,10 @@ function buildTriangles(){
 	return triangles;
 }
 
-function Downgrade(prefix, maxlen, type){
-	this.prefix = prefix;
-	this.maxlen = maxlen;
+function Downgrade(startAddr, stopAddr, slash, type){
+	this.a = startAddr;
+	this.z = stopAddr;
+	this.slash = slash;
 	this.type = type;
 
 	console.assert( type == "V2U" || type == "U2I" || type == "V2I");
@@ -192,6 +193,72 @@ function getQueryString(){
 }
 
 
+function computeWindow(newDowngrades, ip, slash, maxlen){
+	var downgrades = newDowngrades
+
+	//Vet Downgrades
+	// for(var d in newDowngrades){
+	// 	var downgrade = newDowngrades[d];
+	// 	if (slash <= downgrade.slash && downgrade.slash <= maxlen){
+	// 		downgrades.push(downgrades);
+	// 	}
+	// }
+
+	var w = []
+	var ds = [];
+
+	depth = maxlen-slash;
+
+	for (var level = 0; level < depth; level++){
+		branches = [];
+
+		var mask = (0xFF ^ (0xFF >> level));
+		var node = ip & mask;
+		var inc = 0x100 >> level;
+
+		for (var i = 0; i < Math.pow(2, level); i++){
+			//console.log( node );
+			var color = null;
+
+			for(var d in downgrades){
+				var downgrade = downgrades[d];
+				//console.log(downgrade+"A:"+downgrade.a+", B:"+downgrade.z+", node:"+node);
+
+				if (downgrade.slash == (level+slash) && downgrade.a <= node  && node <= downgrade.z ){
+					color = downgrade.type;
+					console.log("^-^");
+				}
+			}	
+			branches.push(color);
+			w.push(color);
+
+			node = node + inc;
+		}
+		ds.push(branches);
+	}
+
+	return w;
+}
+
+// var ip1 = 0x80*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //128.0.0.0
+// var ip2 = 0xC0*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //192.0.0.0
+// var ip3 = 0x00*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //0.0.0.0
+var ip1 = 0x80; //128
+var ip2 = 0xC0; //192
+var ip3 = 0x00; //0
+
+var downgrades2 = [];
+var downgrade =  new Downgrade(ip1, ip2, 2, "V2U");
+downgrades2.push( downgrade );
+var downgrade =  new Downgrade(0x20, 0x60, 3, "V2I");
+downgrades2.push( downgrade );
+var downgrade =  new Downgrade(0x00, 0x00, 0, "U2I");
+downgrades2.push( downgrade );
+
+w = computeWindow(downgrades2, ip3, 0, 8);
+
+//console.log(w);
+
 var r = new Render();
 var triangles = buildTriangles();
 
@@ -199,25 +266,23 @@ console.log(getQueryString());
 
 
 
-var downgrades = {};
-var downgrade =  new Downgrade(1, 1, "V2U");
-downgrades[ downgrade.prefix ] = downgrade;
-var downgrade =  new Downgrade(2, 1, "U2I");
-downgrades[ downgrade.prefix ] = downgrade;
-var downgrade =  new Downgrade(4, 1, "V2I");
-downgrades[ downgrade.prefix ] = downgrade;
-
-
+// var downgrades = {};
+// var downgrade =  new Downgrade(1, 1, "V2U");
+// downgrades[ downgrade.prefix ] = downgrade;
+// var downgrade =  new Downgrade(2, 1, "U2I");
+// downgrades[ downgrade.prefix ] = downgrade;
+// var downgrade =  new Downgrade(4, 1, "V2I");
+// downgrades[ downgrade.prefix ] = downgrade;
+var triNum = 0;
 for (var t in triangles){
 
 	// console.log(t);
 	// console.log(downgrade.prefix);
-	if (t in downgrades &&  downgrades[t].type == "V2U"){
+	if (w[triNum] == "V2U"){
 		r.drawTriangleFill(triangles[t], "#848484");
-	} else 	if (t in downgrades &&  downgrades[t].type == "U2I"){
+	} else 	if (w[triNum] == "U2I"){
 		r.drawTriangleFill(triangles[t], "#BDBDBD");
-
-	} else 	if (t in downgrades &&  downgrades[t].type == "V2I"){
+	} else 	if (w[triNum] == "V2I"){
 		r.drawTriangleFill(triangles[t], "#2E2E2E");
 
 	} else {
@@ -226,6 +291,7 @@ for (var t in triangles){
 
 	r.drawCircleFill( triangles[t].top, "grey" );
 
+	triNum++;
 } 
 
 
