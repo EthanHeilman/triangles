@@ -158,7 +158,7 @@ function buildTriangles(){
 
 		var new_stack = [];
 		while(stack.length > 0){
-			var t = stack.pop();
+			var t = stack.shift();
 
 			var scaling_factor = 1;
 			//var scaling_factor = (level+1)/2.5; //can not be zero
@@ -273,11 +273,14 @@ console.log(getQueryString());
 // downgrades[ downgrade.prefix ] = downgrade;
 // var downgrade =  new Downgrade(4, 1, "V2I");
 // downgrades[ downgrade.prefix ] = downgrade;
+
+console.log(w);
 var triNum = 0;
 for (var t in triangles){
 
 	// console.log(t);
 	// console.log(downgrade.prefix);
+
 	if (w[triNum] == "V2U"){
 		r.drawTriangleFill(triangles[t], "#848484");
 	} else 	if (w[triNum] == "U2I"){
