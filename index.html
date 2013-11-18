@@ -13,7 +13,6 @@ function P(x, y){
 	this.y = y;
 }
 
-
 function Triangle(top, left, right){
 	this.top = top;
 	this.left = left;
@@ -187,6 +186,13 @@ function Downgrade(startAddr, stopAddr, slash, type){
 
 }
 
+function IP(x1, x2, x3, x4){
+	this.x1 = x1;
+	this.x2 = x2;
+	this.x3 = x3;
+	this.x4 = x4;
+}
+
 
 function getQueryString(){
 	return location.search;
@@ -240,12 +246,16 @@ function computeWindow(newDowngrades, ip, slash, maxlen){
 	return w;
 }
 
+var triIP = 0x00; //0   = 0000,0000
+var triSlash = 0;
+var triMaxlen = 8;
+
+
 // var ip1 = 0x80*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //128.0.0.0
 // var ip2 = 0xC0*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //192.0.0.0
 // var ip3 = 0x00*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //0.0.0.0
-var ip1 = 0x80; //128
-var ip2 = 0xC0; //192
-var ip3 = 0x00; //0
+var ip1 = 0x80; //128 = 1000,0000
+var ip2 = 0xC0; //192 = 1100,0000
 
 var downgrades2 = [];
 var downgrade =  new Downgrade(ip1, ip2, 2, "V2U");
@@ -255,7 +265,7 @@ downgrades2.push( downgrade );
 var downgrade =  new Downgrade(0x00, 0x00, 0, "U2I");
 downgrades2.push( downgrade );
 
-w = computeWindow(downgrades2, ip3, 0, 8);
+w = computeWindow(downgrades2, triIP, triSlash, triMaxlen);
 
 //console.log(w);
 
