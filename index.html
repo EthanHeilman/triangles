@@ -2,11 +2,18 @@
 <html>
 <body>
 
-<canvas id="canvas" width="1200" height="800" style="border:1px solid #000000;">
+<canvas id="canvas" width="6000" height="800" style="border:1px solid #000000;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
 <script type="text/javascript">
+
+
+var colorV2U = "#6FFF00";
+var colorU2I = "#FE0001";
+var colorV2I = "#FFFF00";
+var lineColor= "#CC00CC";
+var bgColor = "#303032";
 
 function P(x, y){
 	this.x = x;
@@ -78,10 +85,13 @@ function Triangle(top, left, right){
 function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
+	this.ctx.fillStyle   = bgColor; // set canvas background color
+	this.ctx.fillRect  (0,   0, 6000, 800);  // now fill the canvas
+
 	this.drawTriangleOutline = function(t){
 		var ctx = this.ctx;
 
-		//ctx.fillStyle = color;//"red";
+		ctx.strokeStyle = lineColor;//"red";
 		ctx.beginPath();
 		ctx.moveTo(t.top.x, t.top.y);
 		ctx.lineTo(t.left.x, t.left.y);
@@ -102,7 +112,7 @@ function Render(){
 		ctx.lineTo(t.right.x, t.right.y);
 
 		ctx.lineTo(t.top.x, t.top.y);
-		ctx.stroke();
+		//ctx.stroke();
 		ctx.fill();
 	};
 
@@ -138,9 +148,10 @@ function Render(){
 
 function buildTriangles(){
 	var y_step = 50;
-	var max_depth = 8;
+	//var max_depth = 8;
+	var max_depth = 16;
 	var t_height = y_step*max_depth;
-	var width = 10;
+	var width = 100;
 	var t_side_len = Math.sqrt( width*3/4*Math.pow(t_height,2) );
 	var x_trans = 50;
 	var y_trans = 50;
@@ -191,6 +202,10 @@ function IP(x1, x2, x3, x4){
 	this.x2 = x2;
 	this.x3 = x3;
 	this.x4 = x4;
+
+	this.slash24Int = function(){
+		return Math.pow(this.x2,2)+this.x3;
+	};
 }
 
 
@@ -213,46 +228,33 @@ function computeWindow(newDowngrades, ip, slash, maxlen){
 	var w = []
 	var ds = [];
 
-	depth = maxlen-slash;
+	depth = 16;//maxlen-slash;
 
 	for (var level = 0; level < depth; level++){
-		var mask = (0xFF ^ (0xFF >> level));
+		var mask = (0xFFFF ^ (0xFFFF >> level));
 
 		// This slash if block is so janky, will fix later
-		if (slash == 0) var node = ip.x1 & mask;
-		if (slash == 8) var node = ip.x2 & mask;
-		if (slash == 16) var node = ip.x3 & mask;
-		if (slash == 24) var node = ip.x4 & mask;
+		// if (slash == 0) var node = ip.x1 & mask;
+		// if (slash == 8) var node = ip.x2 & mask;
+		// if (slash == 16) var node = ip.x3 & mask;
+		// if (slash == 24) var node = ip.x4 & mask;
 
-		var inc = 0x100 >> level;
+		var node = ip.slash24Int() & mask;
+
+		var inc = 0x10000 >> level;
 
 		for (var i = 0; i < Math.pow(2, level); i++){
 			//console.log( node );
 			var color = null;
 
 			for(var d in downgrades){
-				var downgrade = downgrades[d];
-				//console.log(downgrade+"A:"+downgrade.a+", B:"+downgrade.z+", node:"+node);
 
-				if (slash == 0){
-					var startOctet = downgrade.a.x1; //downgrade octet
-					var endOctet = downgrade.z.x1; //downgrade octet
-				}
-				if (slash == 8){
-					if (ip.x1 != downgrade.a.x1) continue;
-					var startOctet = downgrade.a.x2;
-					var endOctet = downgrade.z.x2; 
-				}
-				if (slash == 16){
-					if (ip.x1 != downgrade.a.x1 || ip.x2 != downgrade.a.x2 ) continue;
-					var startOctet = downgrade.a.x3;
-					var endOctet = downgrade.z.x3;
-				}
-				if (slash == 24){
-					if (ip.x1 != downgrade.a.x1 || ip.x2 != downgrade.a.x2 || ip.x3 != downgrade.a.x3 ) continue;
-					var startOctet = downgrade.a.x4;
-					var endOctet = downgrade.z.x4;
-				}
+				var downgrade = downgrades[d];
+
+				if (! (downgrade.a.x1 <= ip.x1 && ip.x1 <= downgrade.z.x1) ) continue;
+
+				var startOctet = downgrade.a.slash24Int();
+				var endOctet = downgrade.z.slash24Int();
 
 				if (downgrade.slash == (level+slash) && startOctet <= node  && node <= endOctet ){
 					color = downgrade.type;
@@ -271,16 +273,16 @@ function computeWindow(newDowngrades, ip, slash, maxlen){
 //var triIP = new IP(0x00, 0x00, 0x00, 0x00); //0   = 0000,0000
 var triIP = new IP(0x45, 0x00, 0x00, 0x00); //0   = 0000,0000
 
-var triDepth = 8;
+var triDepth = 0;
 var triSlash = 0+triDepth;
-var triMaxlen = 8+triDepth;
+var triMaxlen = 4+triDepth;
 
 
 // var ip1 = 0x80*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //128.0.0.0
 // var ip2 = 0xC0*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //192.0.0.0
 // var ip3 = 0x00*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //0.0.0.0
-var ip1 = new IP(0x80, 0x00, 0x00, 0x00);; //128 = 1000,0000
-var ip2 = new IP(0xC0, 0x00, 0x00, 0x00);; //192 = 1100,0000
+var ip1 = new IP(0x00, 0x00, 0x00, 0x00);; //128 = 1000,0000
+var ip2 = new IP(0xF0, 0xC0, 0x00, 0x00);; //192 = 1100,0000
 
 var ip3 = new IP(0x20, 0x00, 0x00, 0x00);
 var ip4 = new IP(0x60, 0x00, 0x00, 0x00);
@@ -289,8 +291,12 @@ var ip5 = new IP(0x00, 0x00, 0x00, 0x00);
 
 var ip6 = new IP(0x00, 0xF0, 0x00, 0x00); //0.240
 
-var ip7 = new IP(0x45, 0x00, 0x00, 0x00); //0.240
-var ip8 = new IP(0x45, 0x0F, 0x00, 0x00); //0.240
+var ip7 = new IP(0x45, 0xA0, 0x00, 0x00); //0.240
+var ip8 = new IP(0x45, 0xC0, 0x00, 0x00); //0.240
+
+
+var ip9 = new IP(0x00, 0x00, 0x00, 0x00); //0.240
+var ip10 = new IP(0xFF, 0xC1, 0x00, 0x00); //255.128
 
 
 var downgrades2 = [];
@@ -306,6 +312,10 @@ downgrades2.push( downgrade );
 var downgrade =  new Downgrade(ip7, ip8, 13, "U2I");
 downgrades2.push( downgrade );
 
+var downgrade =  new Downgrade(ip9, ip10, 15, "V2I");
+downgrades2.push( downgrade );
+
+
 w = computeWindow(downgrades2, triIP, triSlash, triMaxlen);
 
 //console.log(w);
@@ -317,23 +327,29 @@ console.log(getQueryString());
 
 console.log(w);
 var triNum = 0;
+
+
 for (var t in triangles){
 
 	// console.log(t);
 	// console.log(downgrade.prefix);
 
 	if (w[triNum] == "V2U"){
-		r.drawTriangleFill(triangles[t], "#848484");
+		// r.drawTriangleFill(triangles[t], "#848484");
+		 r.drawTriangleFill(triangles[t], colorV2U);
+
 	} else 	if (w[triNum] == "U2I"){
-		r.drawTriangleFill(triangles[t], "#BDBDBD");
+		//r.drawTriangleFill(triangles[t], "#BDBDBD");
+		r.drawTriangleFill(triangles[t], colorU2I);
 	} else 	if (w[triNum] == "V2I"){
-		r.drawTriangleFill(triangles[t], "#2E2E2E");
+		//r.drawTriangleFill(triangles[t], "#2E2E2E");
+		r.drawTriangleFill(triangles[t], colorV2I);
 
 	} else {
 		r.drawTriangleOutline(triangles[t] );
 	}
 
-	r.drawCircleFill( triangles[t].top, "grey" );
+	//r.drawCircleFill( triangles[t].top, "grey" );
 
 	triNum++;
 } 
