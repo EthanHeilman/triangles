@@ -216,10 +216,14 @@ function computeWindow(newDowngrades, ip, slash, maxlen){
 	depth = maxlen-slash;
 
 	for (var level = 0; level < depth; level++){
-		branches = [];
-
 		var mask = (0xFF ^ (0xFF >> level));
-		var node = ip & mask;
+
+		// This slash if block is so janky, will fix later
+		if (slash == 0) var node = ip.x1 & mask;
+		if (slash == 8) var node = ip.x2 & mask;
+		if (slash == 16) var node = ip.x3 & mask;
+		if (slash == 24) var node = ip.x4 & mask;
+
 		var inc = 0x100 >> level;
 
 		for (var i = 0; i < Math.pow(2, level); i++){
@@ -230,39 +234,76 @@ function computeWindow(newDowngrades, ip, slash, maxlen){
 				var downgrade = downgrades[d];
 				//console.log(downgrade+"A:"+downgrade.a+", B:"+downgrade.z+", node:"+node);
 
-				if (downgrade.slash == (level+slash) && downgrade.a <= node  && node <= downgrade.z ){
+				if (slash == 0){
+					var startOctet = downgrade.a.x1; //downgrade octet
+					var endOctet = downgrade.z.x1; //downgrade octet
+				}
+				if (slash == 8){
+					if (ip.x1 != downgrade.a.x1) continue;
+					var startOctet = downgrade.a.x2;
+					var endOctet = downgrade.z.x2; 
+				}
+				if (slash == 16){
+					if (ip.x1 != downgrade.a.x1 || ip.x2 != downgrade.a.x2 ) continue;
+					var startOctet = downgrade.a.x3;
+					var endOctet = downgrade.z.x3;
+				}
+				if (slash == 24){
+					if (ip.x1 != downgrade.a.x1 || ip.x2 != downgrade.a.x2 || ip.x3 != downgrade.a.x3 ) continue;
+					var startOctet = downgrade.a.x4;
+					var endOctet = downgrade.z.x4;
+				}
+
+				if (downgrade.slash == (level+slash) && startOctet <= node  && node <= endOctet ){
 					color = downgrade.type;
 					console.log("^-^");
 				}
 			}	
-			branches.push(color);
 			w.push(color);
 
 			node = node + inc;
 		}
-		ds.push(branches);
 	}
 
 	return w;
 }
 
-var triIP = 0x00; //0   = 0000,0000
-var triSlash = 0;
-var triMaxlen = 8;
+//var triIP = new IP(0x00, 0x00, 0x00, 0x00); //0   = 0000,0000
+var triIP = new IP(0x45, 0x00, 0x00, 0x00); //0   = 0000,0000
+
+var triDepth = 8;
+var triSlash = 0+triDepth;
+var triMaxlen = 8+triDepth;
 
 
 // var ip1 = 0x80*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //128.0.0.0
 // var ip2 = 0xC0*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //192.0.0.0
 // var ip3 = 0x00*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //0.0.0.0
-var ip1 = 0x80; //128 = 1000,0000
-var ip2 = 0xC0; //192 = 1100,0000
+var ip1 = new IP(0x80, 0x00, 0x00, 0x00);; //128 = 1000,0000
+var ip2 = new IP(0xC0, 0x00, 0x00, 0x00);; //192 = 1100,0000
+
+var ip3 = new IP(0x20, 0x00, 0x00, 0x00);
+var ip4 = new IP(0x60, 0x00, 0x00, 0x00);
+
+var ip5 = new IP(0x00, 0x00, 0x00, 0x00);
+
+var ip6 = new IP(0x00, 0xF0, 0x00, 0x00); //0.240
+
+var ip7 = new IP(0x45, 0x00, 0x00, 0x00); //0.240
+var ip8 = new IP(0x45, 0x0F, 0x00, 0x00); //0.240
+
 
 var downgrades2 = [];
 var downgrade =  new Downgrade(ip1, ip2, 2, "V2U");
 downgrades2.push( downgrade );
-var downgrade =  new Downgrade(0x20, 0x60, 3, "V2I");
+var downgrade =  new Downgrade(ip3, ip4, 3, "V2I");
 downgrades2.push( downgrade );
-var downgrade =  new Downgrade(0x00, 0x00, 0, "U2I");
+var downgrade =  new Downgrade(ip5, ip5, 0, "U2I");
+downgrades2.push( downgrade );
+var downgrade =  new Downgrade(ip5, ip6, 9, "U2I");
+downgrades2.push( downgrade );
+
+var downgrade =  new Downgrade(ip7, ip8, 13, "U2I");
 downgrades2.push( downgrade );
 
 w = computeWindow(downgrades2, triIP, triSlash, triMaxlen);
@@ -273,16 +314,6 @@ var r = new Render();
 var triangles = buildTriangles();
 
 console.log(getQueryString());
-
-
-
-// var downgrades = {};
-// var downgrade =  new Downgrade(1, 1, "V2U");
-// downgrades[ downgrade.prefix ] = downgrade;
-// var downgrade =  new Downgrade(2, 1, "U2I");
-// downgrades[ downgrade.prefix ] = downgrade;
-// var downgrade =  new Downgrade(4, 1, "V2I");
-// downgrades[ downgrade.prefix ] = downgrade;
 
 console.log(w);
 var triNum = 0;
