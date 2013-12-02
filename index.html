@@ -13,7 +13,223 @@
 
 
 <div id="json-input-div">
-	<textarea id="json-input" rows="15" cols="100">[{"CHANGE":"-V2I", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[120.60.128.0-120.60.128.0] /10", "[120.60.0.64-120.60.192.64] /11", "[120.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]},{"CHANGE":"-V2U", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[121.60.128.0-120.60.128.0] /10", "[121.60.128.0-120.60.128.64] /11", "[121.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]}]</textarea>
+	<textarea id="json-input" rows="15" cols="100">[
+    {
+        "CHANGE": "+U2I",
+        "ROA": {
+            "AS": "001",
+            "PREFIX": "64.8.128.0/25-27",
+            "PATH": "path3"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "[64.8.128.0-128.64.128.0] /9",
+            "[64.8.128.0-128.64.128.0] /10",
+            "empty /11",
+            "[64.8.128.0-128.64.128.0] /12",
+            "empty /13",
+            "[64.1.1.0-128.128.128.0] /14",
+            "empty /15",
+            "[64.1.1.0-128.128.255.0] /16",
+            "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "empty /22",
+            "empty /23",
+            "empty /24",
+            "empty /25",
+            "empty /26",
+            "empty /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    },
+    {
+        "CHANGE": "-V2I",
+        "ROA": {
+            "AS": "002",
+            "PREFIX": "64.8.128.0/25-27",
+            "PATH": "path4"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "empty /9",
+            "empty /10",
+            "[64.8.128.0-128.255.128.0] /11",
+            "empty /12",
+            "empty /13",
+            "empty /14",
+            "empty /15",
+            "[64.0.0.0-128.255.255.0] /16",
+            "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "[64.128.0.0-128.255.255.0] /16 /22",
+            "empty /23",
+            "empty /24",
+            "empty /25",
+            "empty /26",
+            "empty /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    },
+    {
+        "CHANGE": "-V2U",
+        "ROA": {
+            "AS": "003",
+            "PREFIX": "64.8.128.0/25-27",
+            "PATH": "path5"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "empty /9",
+            "empty /10",
+            "empty /11",
+            "empty /12",
+            "[64.55.23.0-128.192.57.0] /13",
+            "empty /14",
+            "empty /15",
+            "empty /16",
+            "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "[64.128.0.0-128.255.255.0] /16 /22",
+            "empty /23",
+            "[64.0.0.0-128.255.255.255] /24",
+            "empty /25",
+            "empty /26",
+            "empty /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    },
+    {
+        "CHANGE": "-V2I",
+        "ROA": {
+            "AS": "001",
+            "PREFIX": "120.60.128.0/25-27",
+            "PATH": "path3"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "empty /9",
+            "[120.60.128.0-120.60.128.0] /10",
+            "[120.60.0.64-120.60.192.64] /11",
+            "[120.60.128.0-120.60.128.64] /12",
+            "[120.60.128.0-120.60.128.64] /13",
+            "empty /14",
+            "empty /15",
+            "empty /16",
+            "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "empty /22",
+            "empty /23",
+            "empty /24",
+            "[120.60.128.0-120.60.128.0] /25",
+            "[120.60.128.0-120.60.128.64] /26",
+            "[120.60.128.0-120.60.128.96] /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    },
+    {
+        "CHANGE": "-V2U",
+        "ROA": {
+            "AS": "001",
+            "PREFIX": "120.60.128.0/25-27",
+            "PATH": "path3"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "empty /9",
+            "[122.60.128.0-122.60.128.0] /10",
+            "[122.60.128.0-122.60.128.64] /11",
+            "[122.60.128.0-122.60.128.64] /12",
+            "empty /13",
+            "empty /14",
+            "empty /15",
+            "empty /16",
+            "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "empty /22",
+            "empty /23",
+            "empty /24",
+            "[122.60.128.0-122.60.128.0] /25",
+            "[122.60.128.0-122.60.128.64] /26",
+            "[122.60.128.0-122.60.128.96] /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    }
+]</textarea>
 </div>
 
 Downgrades:<br>
@@ -25,129 +241,7 @@ Downgrades:<br>
 
 
 <script type="text/javascript">
-
-var ip1 = new IP(120, 60, 0x00, 0x00); //0.240
-var ip2 = new IP(120, 60, 0x00, 0x00); //0.240
-// 120.60.128.0-120.60.128.0\10
-
-var intervals = []; 
-var downgrade =  new Interval(ip1, ip2, 8, "V2U");
-intervals.push( downgrade );
-
-var triIP = new IP(120, 0x00, 0x00, 0x00); //0   = 0000,0000
-
-var triSlash = 8;
-
-
-// var ip7 = new IP(0x45, 0xA0, 0x00, 0x00); //0.240
-// var ip8 = new IP(0x45, 0xC0, 0x00, 0x00); //0.240
-
-// var intervals = []; 
-// var downgrade =  new Interval(ip7, ip8, 4, "V2U");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 5, "V2U");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 6, "V2U");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 7, "V2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 8, "U2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 9, "V2U");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 10, "V2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 11, "U2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 12, "V2U");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 13, "V2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 14, "U2I");
-// intervals.push( downgrade );
-// var downgrade =  new Interval(ip7, ip8, 15, "V2U");
-// intervals.push( downgrade );
-
-// function Interval(startAddr, stopAddr, slash, type){
-// 	this.a = startAddr;
-// 	this.z = stopAddr;
-// 	this.slash = slash;
-// 	this.type = type;
-
-// 	console.assert( type == "V2U" || type == "U2I" || type == "V2I");
-// }
-
-// function IP(x1, x2, x3, x4){
-// 	this.x1 = x1;
-// 	this.x2 = x2;
-// 	this.x3 = x3;
-// 	this.x4 = x4;
-
-// 	this.slash24Int = function(){
-// 		return Math.pow(this.x2,2)+this.x3;
-// 	};
-// }
-
-function getPrefixIntervalSet(downgrade){
-
-	var effects = downgrade["EFFECT"];
-	var type = downgrade["CHANGE"].replace("+", "").replace("-", "");
-	var intervals = []
-
-	for (slash in effects){
-		var effect = effects[slash];
-		var range = effect.split(" ")[0];
-
-		if (range != "empty"){
-
-			var aStr = range.split("-")[0].replace("[", "");
-			var bStr = range.split("-")[1].replace("]", "");
-			var ipA = new IP(Number(aStr.split(".")[0]), Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]));
-			var ipB = new IP(Number(bStr.split(".")[0]), Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]));
-
-			intervals.push( new Interval(ipA, ipB, slash, type) );
-		}
-	}
-	return intervals;
-}
-
-function processDowngrades(){
-
-	var json = $("#json-input").val();
-
-	var input = jQuery.parseJSON( json );
-
-	var intervals = [];
-	var triIP = null;
-	var triSlash = 8;
-
-	for (d in input){
-		var downgrade = input[d];
-		var intervalSet = getPrefixIntervalSet(downgrade);
-		$("#downgrades-list")[0].innerHTML += downgrade["CHANGE"]+","+downgrade["ROA"]["AS"]+","+downgrade["ROA"]["PATH"]+"<br>";
-
-
-		for (i in intervalSet){
-			var interval = intervalSet[i];
-
-			if (triIP == null) {
-				triIP = new IP(interval.a.x1, 0, 0, 0);
-			}
-
-			$("#downgrades-list")[0].innerHTML += "----------> "+interval.toString()+"<br>";
-
-			intervals.push(interval);
-		}
-
-	}
-
-	console.log(triIP.x1);
-	console.log(intervals);
-	display(intervals, triIP, triSlash);
-}
-
 	
-
 
 $("#cyber").scrollLeft(2500);
 
@@ -364,14 +458,6 @@ function getQueryString(){
 function computeWindow(newDowngrades, ip, slash){
 	var downgrades = newDowngrades
 
-	//Vet Downgrades
-	// for(var d in newDowngrades){
-	// 	var downgrade = newDowngrades[d];
-	// 	if (slash <= downgrade.slash && downgrade.slash <= maxlen){
-	// 		downgrades.push(downgrades);
-	// 	}
-	// }
-
 	var w = []
 	var ds = [];
 
@@ -380,19 +466,12 @@ function computeWindow(newDowngrades, ip, slash){
 	for (var level = 0; level < depth; level++){
 		var mask = (0xFFFF ^ (0xFFFF >> level));
 
-		// This slash if block is so janky, will fix later
-		// if (slash == 0) var node = ip.x1 & mask;
-		// if (slash == 8) var node = ip.x2 & mask;
-		// if (slash == 16) var node = ip.x3 & mask;
-		// if (slash == 24) var node = ip.x4 & mask;
-
 		var node = ip.slash24Int() & mask;
 
 		var inc = 0x10000 >> level;
 		console.log(level);
 
 		for (var i = 0; i < Math.pow(2, level); i++){
-			//console.log( node );
 			var color = null;
 
 			for(var d in downgrades){
@@ -407,14 +486,6 @@ function computeWindow(newDowngrades, ip, slash){
 				if ( downgrade.slash == (level+slash) ){
 				 	if( startOctet <= node  && node <= endOctet ){
 						color = downgrade.type;
-						// console.log("^-^");
-						// console.log("mask:"+mask.toString(2));
-						// console.log("startOctet:"+startOctet.toString(2));
-						// console.log("downgrade.a.slash24Int():"+Number(downgrade.a.slash24Int()).toString(2));
-						// console.log("endOctet:"+startOctet.toString(2));
-						// console.log("downgrade.z.slash24Int():"+Number(downgrade.z.slash24Int()).toString(2));
-						// console.log("node:"+node.toString(2));
-
 					}
 				}
 			}	
@@ -427,72 +498,20 @@ function computeWindow(newDowngrades, ip, slash){
 	return w;
 }
 
-//var triIP = new IP(0x00, 0x00, 0x00, 0x00); //0   = 0000,0000
-// var triIP = new IP(120, 0x00, 0x00, 0x00); //0   = 0000,0000
-
-// var triDepth = 0;
-// var triSlash = 8+triDepth;
-
-
-// var ip1 = 0x80*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //128.0.0.0
-// var ip2 = 0xC0*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //192.0.0.0
-// var ip3 = 0x00*Math.pow(2, 12)+0x00*Math.pow(2, 8)+0x00*Math.pow(2, 4)+0x00*Math.pow(2, 0); //0.0.0.0
-var ip1 = new IP(0x00, 0x00, 0x00, 0x00);; //128 = 1000,0000
-var ip2 = new IP(0xF0, 0xC0, 0x00, 0x00);; //192 = 1100,0000
-
-var ip3 = new IP(0x20, 0x00, 0x00, 0x00);
-var ip4 = new IP(0x60, 0x00, 0x00, 0x00);
-
-var ip5 = new IP(0x00, 0x00, 0x00, 0x00);
-
-var ip6 = new IP(0x00, 0xF0, 0x00, 0x00); //0.240
-
-
-
-
-var ip9 = new IP(0x00, 0x00, 0x00, 0x00); //0.240
-var ip10 = new IP(0xFF, 0xC1, 0x00, 0x00); //255.128
-
-
-// var downgrades2 = [];
-// var downgrade =  new Interval(ip1, ip2, 2, "V2U");
-// downgrades2.push( downgrade );
-// var downgrade =  new Interval(ip3, ip4, 3, "V2I");
-// downgrades2.push( downgrade );
-// var downgrade =  new Interval(ip5, ip5, 0, "U2I");
-// downgrades2.push( downgrade );
-// var downgrade =  new Interval(ip5, ip6, 9, "U2I");
-// downgrades2.push( downgrade );
-
-// var downgrade =  new Interval(ip7, ip8, 13, "U2I");
-// downgrades2.push( downgrade );
-
-// var downgrade =  new Interval(ip9, ip10, 15, "V2I");
-// downgrades2.push( downgrade );
-//downgrades2
-
-display(intervals, triIP, triSlash);
-
 
 function display(intervals, triIP, triSlash){
-	//console.log(intervals);
-	w = computeWindow(intervals, triIP, triSlash);
 
-	//console.log(w);
+	w = computeWindow(intervals, triIP, triSlash);
 
 	var r = new Render();
 	var triangles = buildTriangles();
 
 	var triNum = 0;
 
-	// console.log(w.length);
-	// console.log(triangles);
+
 	console.log(w[w.length-1])
 
 	for (var t in w){
-
-		// console.log(t);
-		// console.log(downgrade.prefix);
 
 		if (w[triNum] == "V2U"){
 			console.assert(triangles[t]!=null);
@@ -515,8 +534,80 @@ function display(intervals, triIP, triSlash){
 
 		triNum++;
 	} 
-
 }
+
+function getPrefixIntervalSet(downgrade){
+
+	var effects = downgrade["EFFECT"];
+	var type = downgrade["CHANGE"].replace("+", "").replace("-", "");
+	var intervals = []
+
+	for (slash in effects){
+		var effect = effects[slash];
+		var range = effect.split(" ")[0];
+
+		if (range != "empty"){
+
+			var aStr = range.split("-")[0].replace("[", "");
+			var bStr = range.split("-")[1].replace("]", "");
+			var ipA = new IP(Number(aStr.split(".")[0]), Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]));
+			var ipB = new IP(Number(bStr.split(".")[0]), Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]));
+
+			intervals.push( new Interval(ipA, ipB, slash, type) );
+		}
+	}
+	return intervals;
+}
+
+var intervals = []; //TODO: turn this into a class variable
+var triSlash = 8;
+
+function intervalClicked( rootOctet ){
+	console.log(rootOctet);
+	var triIP = new IP(rootOctet,  0, 0, 0);
+			
+	display(intervals, triIP, triSlash);
+}
+
+
+function processDowngrades(){
+
+	var json = $("#json-input").val();
+
+	var input = jQuery.parseJSON( json );
+
+	intervals = [];
+	var triIP = null;
+
+	$("#downgrades-list")[0].innerHTML = "";
+	for (d in input){
+		var downgrade = input[d];
+		var intervalSet = getPrefixIntervalSet(downgrade);
+		$("#downgrades-list")[0].innerHTML += downgrade["CHANGE"]+","+downgrade["ROA"]["AS"]+","+downgrade["ROA"]["PATH"]+"<br>";
+
+
+		for (i in intervalSet){
+			var interval = intervalSet[i];
+
+			if (triIP == null) {
+				triIP = new IP(interval.a.x1, 0, 0, 0);
+			}
+
+			// This is really ugly, I need to fix this after I refactor a bunch of this code
+			var link = "----------> <a href='#' rel='nofollow' onclick='intervalClicked("+Number(interval.a.x1)+");'>"+interval.toString()+"</a><br>";
+
+			$("#downgrades-list")[0].innerHTML += link;
+
+			intervals.push(interval);
+		}
+
+	}
+
+	display(intervals, triIP, triSlash);
+}
+
+processDowngrades();
+
 
 </script>
 
