@@ -12,8 +12,8 @@
 <input type="button" onclick="processDowngrades()" value="Process Downgrades">
 
 
-<div id="json-input">
-	<textarea rows="15" cols="100">Put Json Here.</textarea>
+<div id="json-input-div">
+	<textarea id="json-input" rows="15" cols="100">[{"CHANGE":"-V2I", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[120.60.128.0-120.60.128.0] /10", "[120.60.0.64-120.60.192.64] /11", "[120.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]},{"CHANGE":"-V2U", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[121.60.128.0-120.60.128.0] /10", "[121.60.128.0-120.60.128.64] /11", "[121.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]}]</textarea>
 </div>
 
 Downgrades:<br>
@@ -102,9 +102,8 @@ function getPrefixIntervalSet(downgrade){
 
 			var aStr = range.split("-")[0].replace("[", "");
 			var bStr = range.split("-")[1].replace("]", "");
-
-			var ipA = new IP(aStr.split(".")[0], aStr.split(".")[1], aStr.split(".")[2], aStr.split(".")[3]);
-			var ipB = new IP(bStr.split(".")[0], bStr.split(".")[1], bStr.split(".")[2], bStr.split(".")[3]);
+			var ipA = new IP(Number(aStr.split(".")[0]), Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]));
+			var ipB = new IP(Number(bStr.split(".")[0]), Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]));
 
 			intervals.push( new Interval(ipA, ipB, slash, type) );
 		}
@@ -114,7 +113,7 @@ function getPrefixIntervalSet(downgrade){
 
 function processDowngrades(){
 
-	var json = '[{"CHANGE":"-V2I", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[120.60.128.0-120.60.128.0] /10", "[120.60.0.0-120.60.192.64] /11", "[120.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]},{"CHANGE":"-V2U", "ROA":{"AS" :"001", "PREFIX":"120.60.128.0/25-27", "PATH":"path3"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "[121.60.128.0-120.60.128.0] /10", "[121.60.128.0-120.60.128.64] /11", "[121.60.128.0-120.60.128.64] /12", "empty /13", "empty /14", "empty /15", "empty /16", "empty /17", "empty /18", "empty /19", "empty /20", "empty /21", "empty /22", "empty /23", "empty /24", "[120.60.128.0-120.60.128.0] /25", "[120.60.128.0-120.60.128.64] /26", "[120.60.128.0-120.60.128.96] /27", "empty /28", "empty /29", "empty /30", "empty /31", "empty /32"]}]';
+	var json = $("#json-input").val();
 
 	var input = jQuery.parseJSON( json );
 
@@ -348,7 +347,7 @@ function IP(x1, x2, x3, x4){
 	this.x4 = x4;
 
 	this.slash24Int = function(){
-		return Math.pow(this.x2,2)+this.x3;
+		return 256*this.x2+this.x3;
 	};
 
 	this.toString = function(){
@@ -408,7 +407,14 @@ function computeWindow(newDowngrades, ip, slash){
 				if ( downgrade.slash == (level+slash) ){
 				 	if( startOctet <= node  && node <= endOctet ){
 						color = downgrade.type;
-						console.log("^-^");
+						// console.log("^-^");
+						// console.log("mask:"+mask.toString(2));
+						// console.log("startOctet:"+startOctet.toString(2));
+						// console.log("downgrade.a.slash24Int():"+Number(downgrade.a.slash24Int()).toString(2));
+						// console.log("endOctet:"+startOctet.toString(2));
+						// console.log("downgrade.z.slash24Int():"+Number(downgrade.z.slash24Int()).toString(2));
+						// console.log("node:"+node.toString(2));
+
 					}
 				}
 			}	
