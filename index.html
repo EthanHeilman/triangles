@@ -32,15 +32,58 @@
             "empty /6",
             "empty /7",
             "empty /8",
-            "[64.8.128.0-128.64.128.0] /9",
-            "[64.8.128.0-128.64.128.0] /10",
+            "[64.8.128.0-64.64.128.0] /9",
+            "[64.8.128.0-64.64.128.0] /10",
             "empty /11",
-            "[64.8.128.0-128.64.128.0] /12",
+            "[64.8.128.0-64.64.128.0] /12",
             "empty /13",
-            "[64.1.1.0-128.128.128.0] /14",
+            "[64.1.1.0-64.128.128.0] /14",
             "empty /15",
-            "[64.1.1.0-128.128.255.0] /16",
+            "[64.1.1.0-64.128.255.0] /16",
             "empty /17",
+            "empty /18",
+            "empty /19",
+            "empty /20",
+            "empty /21",
+            "empty /22",
+            "empty /23",
+            "empty /24",
+            "empty /25",
+            "empty /26",
+            "empty /27",
+            "empty /28",
+            "empty /29",
+            "empty /30",
+            "empty /31",
+            "empty /32"
+        ]
+    },
+    {
+        "CHANGE": "+U2I",
+        "ROA": {
+            "AS": "001",
+            "PREFIX": "64.8.128.0/25-27",
+            "PATH": "path3"
+        },
+        "EFFECT": [
+            "empty /0",
+            "empty /1",
+            "empty /2",
+            "empty /3",
+            "empty /4",
+            "empty /5",
+            "empty /6",
+            "empty /7",
+            "empty /8",
+            "empty /9",
+            "empty /10",
+            "empty /11",
+            "empty /12",
+            "empty /13",
+            "empty /14",
+            "empty /15",
+            "empty /16",
+            "[1.1.1.0-128.128.255.0] /17",
             "empty /18",
             "empty /19",
             "empty /20",
@@ -486,9 +529,14 @@ function computeWindow(newDowngrades, ip, slash){
 				var endOctet = downgrade.z.slash24Int() & mask;
 
 				if ( downgrade.slash == (level+slash) ){
-				 	if( startOctet <= node  && node <= endOctet ){
-						color = downgrade.type;
-					}
+					
+					//edge cases where the downgrade starts outside the draw window
+					if ( downgrade.a.x1 < ip.x1 && ip.x1 < downgrade.z.x1 ) color = downgrade.type;
+					if ( downgrade.a.x1 < ip.x1 && node <= endOctet ) color = downgrade.type;
+					else if ( ip.x1 < downgrade.z.x1 && startOctet <= node ) color = downgrade.type;
+
+					// downgrade x1 = ip x1
+				 	else if( startOctet <= node  && node <= endOctet ) color = downgrade.type;
 				}
 			}	
 			w.push(color);
