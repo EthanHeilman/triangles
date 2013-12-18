@@ -2,8 +2,8 @@
 <html>
 <body>
 
-<div id="cyber" style="border : solid 20x #ff0000; background : #000000; color : #ffffff; padding : 4px; width : 100%; height : 850px; overflow-x: auto;">
-	<canvas id="canvas" width="6000" height="850" style="border:0px solid #000000;">
+<div id="cyber" style="border : solid 20x #ff0000; background : #000000; color : #ffffff; padding : 4px; width : 100%; height : 920px; overflow-x: auto;">
+	<canvas id="canvas" width="6000" height="900" style="border:0px solid #000000;">
 	Your browser does not support the HTML5 canvas tag.
 	</canvas>
 </div>
@@ -21,7 +21,7 @@
 	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /17"]}
 	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /19"]}
 	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /21"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /23"]}
+	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /24"]}
 	</textarea>
 </div>
 
@@ -113,7 +113,7 @@ function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
 	var xWidth = 6000;
-	var yHeight = 850;
+	var yHeight = 900;
 
 	this.ctx.fillStyle   = bgColor; // set canvas background color
 	this.ctx.fillRect(0,   0, xWidth, yHeight);  // now fill the canvas
@@ -122,7 +122,7 @@ function Render(){
 	this.drawLegend = function(){
 		var legendSize = 20;
 		var legendYMargin = 20;
-		var legendXOffset = xWidth/2 - 300;
+		var legendXOffset = xWidth/2 - 500;
 		var textYMargin= 35;
 		var fontsize = 18;
 
@@ -207,9 +207,9 @@ function Render(){
 function buildTriangles(){
 	var y_step = 50;
 	//var max_depth = 8;
-	var max_depth = 16;
+	var max_depth = 17;
 	var t_height = y_step*max_depth;
-	var width = 70;
+	var width = 60;
 	var t_side_len = Math.sqrt( width*3/4*Math.pow(t_height,2) );
 	var x_trans = 50;
 	var y_trans = 50;
@@ -238,8 +238,9 @@ function buildTriangles(){
 
 			new_stack.push.apply(new_stack, t.split( y_step/(scaling_factor) ) );
 		}
-
-		stack.push.apply(stack, new_stack);
+		for ( i in new_stack ){
+			stack.push(new_stack[i]);
+		}
 	}
 
 	return triangles;
@@ -285,7 +286,7 @@ function computeWindow(newDowngrades, ip, slash){
 	var w = []
 	var ds = [];
 
-	depth = 16;//maxlen-slash;
+	depth = 17;//maxlen-slash;
 
 	for (var level = 0; level < depth; level++){
 		var mask = (0xFFFF ^ (0xFFFF >> level));
