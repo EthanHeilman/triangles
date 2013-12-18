@@ -2,7 +2,6 @@
 <html>
 <body>
 
-
 <div id="cyber" style="border : solid 20x #ff0000; background : #000000; color : #ffffff; padding : 4px; width : 100%; height : 850px; overflow-x: auto;">
 	<canvas id="canvas" width="6000" height="850" style="border:0px solid #000000;">
 	Your browser does not support the HTML5 canvas tag.
@@ -19,7 +18,7 @@
         "CHANGE": "+U2I",
         "ROA": {
             "AS": "001",
-            "PREFIX": "64.8.128.0/25-27",
+            "PREFIX": "64.8.128.0/8-24",
             "PATH": "path3"
         },
         "EFFECT": [
@@ -364,8 +363,39 @@ function Triangle(top, left, right){
 function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
+	var xWidth = 6000;
+	var yHeight = 850;
+
 	this.ctx.fillStyle   = bgColor; // set canvas background color
-	this.ctx.fillRect  (0,   0, 6000, 850);  // now fill the canvas
+	this.ctx.fillRect  (0,   0, xWidth, yHeight);  // now fill the canvas
+
+
+	this.drawLegend = function(){
+		var legendSize = 20;
+		var legendYMargin = 20;
+		var legendXOffset = xWidth/2 - 200;
+		var textYMargin= 35;
+		var fontsize = 18;
+
+		this.ctx.fillStyle=colorV2U;
+		this.ctx.fillRect(legendXOffset,legendYMargin,legendSize,legendSize);
+
+		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillText(" - Valid to Invalid", legendXOffset + legendSize, textYMargin);
+
+		this.ctx.fillStyle=colorU2I;
+		this.ctx.fillRect(legendXOffset + 170,legendYMargin,legendSize,legendSize);
+
+		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillText(" - Unknown to Invalid", legendXOffset + legendSize + 170, textYMargin);
+
+		this.ctx.fillStyle=colorV2I;
+		this.ctx.fillRect(legendXOffset + 375,legendYMargin,legendSize,legendSize);
+
+		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillText(" - Valid to Invalid", legendXOffset + legendSize + 375, textYMargin);
+	}
+
 
 	this.drawTriangleOutline = function(t){
 		var ctx = this.ctx;
@@ -555,10 +585,8 @@ function display(intervals, triIP, triSlash){
 
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
-
-
-
 	var r = new Render();
+	r.drawLegend();
 	var triangles = buildTriangles();
 
 	var triNum = 0;
