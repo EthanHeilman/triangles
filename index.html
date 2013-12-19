@@ -54,27 +54,25 @@ function Triangle(top, left, right){
 	this.left = left;
 	this.right = right;
 
-	this.m = function(side){
-		rise = this[side].y - this.top.y;
-		run = this[side].x - this.top.x;
+	// Right slope
+	this.right_m = function(){ 
+		rise = this.right.y - this.top.y;
+		run = this.right.x - this.top.x;
 		return rise/run;
 	};
 
-	// Right slope
-	this.right_m = function(){ return this.m("right"); };
-
 	// Left slope
-	this.left_m = function(){ return this.m("left"); };
-
-	this.b = function(side){
-		return this[side].y - this.m(side)*this[side].x;
+	this.left_m = function(){ 
+		rise = this.left.y - this.top.y;
+		run = this.left.x - this.top.x;
+		return rise/run;
 	};
 
 	// Right y-intercept
-	this.right_b = function(){ return this.b("right"); };
+	this.right_b = function(){ return this.right.y - this.right_m()*this.right.x; };
 
 	// left y-intercept
-	this.left_b = function(){ return this.b("left"); };
+	this.left_b = function(){ return this.left.y - this.left_m()*this.left.x; };
 
 
 	this.inner = function(height){
@@ -157,7 +155,6 @@ function Render(){
 
 		ctx.lineTo(t.top.x, t.top.y);
 		ctx.stroke();
-		//ctx.fill();
 	};
 
 	this.drawTriangleFill = function(t, color){
@@ -170,7 +167,6 @@ function Render(){
 		ctx.lineTo(t.right.x, t.right.y);
 
 		ctx.lineTo(t.top.x, t.top.y);
-		//ctx.stroke();
 		ctx.fill();
 	};
 
@@ -236,11 +232,12 @@ function buildTriangles(){
 
 			triangles.push(drawable_triangle); //save for later
 
-			new_stack.push.apply(new_stack, t.split( y_step/(scaling_factor) ) );
+			var new_tris = t.split( y_step/(scaling_factor) );
+
+			for (i in new_tris){ new_stack.push(new_tris[i]); }
 		}
-		for ( i in new_stack ){
-			stack.push(new_stack[i]);
-		}
+		stack = new_stack;
+
 	}
 
 	return triangles;
@@ -294,7 +291,6 @@ function computeWindow(newDowngrades, ip, slash){
 		var node = ip.slash24Int() & mask;
 
 		var inc = 0x10000 >> level;
-		console.log(level);
 
 		for (var i = 0; i < Math.pow(2, level); i++){
 			var color = null;
@@ -341,9 +337,6 @@ function display(intervals, triIP, triSlash){
 
 	var triNum = 0;
 
-
-	console.log(w[w.length-1])
-
 	for (var t in w){
 
 		if (w[triNum] == "V2U"){
@@ -352,7 +345,6 @@ function display(intervals, triIP, triSlash){
 
 		} else 	if (w[triNum] == "U2I"){
 			console.assert(triangles[t]!=null);
-
 			r.drawTriangleFill(triangles[t], colorU2I);
 		} else 	if (w[triNum] == "V2I"){
 			console.assert(triangles[t]!=null);
@@ -363,7 +355,7 @@ function display(intervals, triIP, triSlash){
 			r.drawTriangleOutline(triangles[t] );
 		}	
 
-		//r.drawCircleFill( triangles[t].top, "grey" );
+	// 	//r.drawCircleFill( triangles[t].top, "grey" );
 
 		triNum++;
 	} 
@@ -398,7 +390,6 @@ var intervals = []; //TODO: turn this into a class variable
 var triSlash = 8;
 
 function intervalClicked( rootOctet ){
-	console.log("pppp"+rootOctet);
 	var triIP = new IP(rootOctet,  0, 0, 0);
 			
 	display(intervals, triIP, triSlash);
@@ -432,7 +423,6 @@ function processDowngrades(){
 			if (triIP == null) {
 				triIP = new IP(interval.a.x1, 0, 0, 0);
 			}
-			console.log("iii"+interval.a.x1);
 
 			// This is really ugly, I need to fix this after I refactor a bunch of this code
 			var link = "----------> <a href='#' rel='nofollow' onclick='intervalClicked("+Number(interval.a.x1)+");'>"+interval.toString()+"</a><br>";
@@ -447,7 +437,11 @@ function processDowngrades(){
 	display(intervals, triIP, triSlash);
 }
 
+//var triangles = buildTriangles();
+var start = Date.now();
 processDowngrades();
+var stop = Date.now();
+console.log("time = "+(stop-start)/1000);
 
 
 </script>
