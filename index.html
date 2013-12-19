@@ -8,11 +8,23 @@
 	</canvas>
 </div>
 
-<input type="button" onclick="processDowngrades()" value="Process Downgrades">
+
+
+
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="downgrades-table"></table>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+ 
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+ 
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 
 
 <div id="json-input-div">
-	<textarea id="json-input" rows="15" cols="100">
+	<textarea id="json-input" rows="3" cols="100" style="width : 100%">
 	{"CHANGE":"-V2I", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.77.32.0-37.77.32.0] /8", "[37.0.0.0-37.128.0.0] /16"]}	
 	{"CHANGE":"+U2I", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.0.0.0-37.255.255.0] /10"]}
 	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /11"]}
@@ -25,16 +37,12 @@
 	</textarea>
 </div>
 
-Downgrades:<br>
-<div id="downgrades-list"></div>
-
-
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-
+<input type="button" onclick="processDowngrades()" value="Process Downgrades">
 
 <script type="text/javascript">
 	
+
+
 
 $("#cyber").scrollLeft(2000);
 
@@ -397,6 +405,18 @@ function intervalClicked( rootOctet ){
 
 function isBlank( str ){ return str.trim().length == 0; }
 
+function displayTable( data ){
+	    $('#downgrades-table').dataTable( {
+        "aaData": data,
+        "aoColumns": [
+            { "sTitle": "Downgrade Type", "sClass": "center", "sWidth":"5%" },
+            { "sTitle": "Prefix",  "sWidth":"20%"},
+            { "sTitle": "AS", "sClass": "center", "sWidth":"10%" },
+            { "sTitle": "Path", "sWidth": "40%"},
+        ]
+    } ); 
+}
+
 function processDowngrades(){
 
 	var json = $("#json-input").val().split("\n");
@@ -409,31 +429,27 @@ function processDowngrades(){
 
 	intervals = [];
 	var triIP = null;
+	var tableOutput = [];
 
-	$("#downgrades-list")[0].innerHTML = "";
 	for (d in input){
 		var downgrade = input[d];
 		var intervalSet = getPrefixIntervalSet(downgrade);
-		$("#downgrades-list")[0].innerHTML += downgrade["CHANGE"]+","+downgrade["ROA"]["AS"]+","+downgrade["ROA"]["PATH"]+"<br>";
-
 
 		for (i in intervalSet){
 			var interval = intervalSet[i];
+			var row = [downgrade["CHANGE"], interval.toString(), downgrade["ROA"]["AS"], downgrade["ROA"]["PATH"]];
 
 			if (triIP == null) {
 				triIP = new IP(interval.a.x1, 0, 0, 0);
 			}
 
-			// This is really ugly, I need to fix this after I refactor a bunch of this code
-			var link = "----------> <a href='#' rel='nofollow' onclick='intervalClicked("+Number(interval.a.x1)+");'>"+interval.toString()+"</a><br>";
-
-			$("#downgrades-list")[0].innerHTML += link;
-
+			tableOutput.push(row);
 			intervals.push(interval);
 		}
 
 	}
 
+	displayTable(tableOutput);
 	display(intervals, triIP, triSlash);
 }
 
