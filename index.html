@@ -22,7 +22,7 @@
 
 
 
-<div id="cyber" style="border : solid 20x #ff0000; background : #303032; color : #303032; padding : 4px; width : 100%; height : 700px; overflow-x: auto;">
+<div id="cyber" style="border : solid 0x #ff0000; background : #303032; color : #303032; padding : 4px; width : 100%; height : 700px; overflow-x: auto;">
 	<center>
 	<canvas id="canvas" width="1400" height="700" style="border:0px solid #303032;">
 	Your browser does not support the HTML5 canvas tag.
@@ -421,10 +421,11 @@ function displayTable( data ){
             { "sTitle": "Path", "sWidth": "40%"},
         ],
         "bDestroy": true
+    	} ); 
 
-    } ); 
+    	$('#downgrades-table').css('width', '100%');
 
-	
+
 }
 
 function processDowngrades(){
@@ -439,6 +440,8 @@ function processDowngrades(){
 
 	intervals = [];
 	var triIP = null;
+	if ($("#octet").val() != "") triIP =  new IP(parseInt($("#octet").val()), 0, 0, 0);
+
 	var tableOutput = [];
 
 	for (d in input){
