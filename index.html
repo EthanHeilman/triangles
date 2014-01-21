@@ -6,16 +6,26 @@
 
 <div id="json-input-div">
 	Octet:  <textarea id="octet" rows="1" cols="5" style="width : 5%"></textarea>
-	<textarea id="json-input" rows="1" cols="100" style="width : 80%">
-	{"CHANGE":"-V2I", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.77.32.0-37.77.32.0] /8", "[37.0.0.0-37.128.0.0] /16"]}	
-	{"CHANGE":"+U2I", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.0.0.0-37.255.255.0] /10"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /11"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /13"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /15"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /17"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /19"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /21"]}
-	{"CHANGE":"-V2U", "ROA":{"AS":198625, "PREFIX":"37.77.32.0/20-24", "PATH":"/tmp/2013_10_23_13_46_27_1382550387/authenticated/rpki.ripe.net/repository/32/15d896-2f69-4697-a6fc-08da6652a867/1/1hMbDcrIzrme7Dlgqlt4YiszBY4.roa"}, "EFFECT":["[37.128.0.0-37.255.255.0] /24"]}
+	<textarea id="json-downgrades-input" rows="1" cols="100" style="width : 80%">
+{"CHANGE":"+U2I", "ROA":{"AS":6128, "PREFIX":"173.251.0.0/17-24", "PATH":"/research/bgp_analysis/roa_fetch/trunk/rcynic/archive/old/2013_12_13_02_06_46_1386918406/authenticated/rpki.arin.net/repository/arin-rpki-ta/5e4a23ea-e80a-403e-b08c-2171da2157d3/2a246947-2d62-4a6c-ba05-87187f0099b2/e68161a4-2ddf-4c1f-b8ef-ce2744b60852/0350487d-8749-33ed-b38c-d969eb1fbf3f.roa"}, "EFFECT":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "empty /10", "empty /11", "empty /12", "empty /13", "empty /14", "empty /15", "empty /16", "[173.251.0.0-173.251.0.0] /17", "[173.251.0.0-173.251.64.0] /18", "[173.251.0.0-173.251.96.0] /19", "[173.251.0.0-173.251.112.0] /20", "[173.251.0.0-173.251.120.0] /21", "[173.251.0.0-173.251.124.0] /22", "[173.251.0.0-173.251.126.0] /23", "[173.251.0.0-173.251.127.0] /24", "[173.251.0.0-173.251.127.128] /25", "[173.251.0.0-173.251.127.192] /26", "[173.251.0.0-173.251.127.224] /27", "[173.251.0.0-173.251.127.240] /28", "[173.251.0.0-173.251.127.248] /29", "[173.251.0.0-173.251.127.252] /30", "[173.251.0.0-173.251.127.254] /31", "[173.251.0.0-173.251.127.255] /32"], "EXCEPT":{"3320":["empty /0", "empty /1", "empty /2", "empty /3", "empty /4", "empty /5", "empty /6", "empty /7", "empty /8", "empty /9", "empty /10", "empty /11", "empty /12", "empty /13", "empty /14", "empty /15", "empty /16", "[173.251.0.0-173.251.0.0] /17", "[173.251.0.0-173.251.64.0] /18", "[173.251.0.0-173.251.96.0] /19", "[173.251.0.0-173.251.112.0] /20", "[173.251.0.0-173.251.120.0] /21", "[173.251.0.0-173.251.124.0] /22", "[173.251.0.0-173.251.126.0] /23", "[173.251.0.0-173.251.127.0] /24", "[173.251.0.0-173.251.127.128] /25", "[173.251.0.0-173.251.127.192] /26", "[173.251.0.0-173.251.127.224] /27", "[173.251.0.0-173.251.127.240] /28", "[173.251.0.0-173.251.127.248] /29", "[173.251.0.0-173.251.127.252] /30", "[173.251.0.0-173.251.127.254] /31", "[173.251.0.0-173.251.127.255] /32"]}}
+	</textarea>
+	<textarea id="json-route-input" rows="1" cols="100" style="width : 100%">
+{"PREFIX":"173.251.0.0/17", "AS":"6128", "VALID":"TRUE"}
+{"PREFIX":"173.251.91.0/24", "AS":"53725", "VALID":"FALSE"}
+{"PREFIX":"173.251.73.0/24", "AS":"53651", "VALID":"FALSE"}
+{"PREFIX":"173.251.68.0/24", "AS":"62641", "VALID":"FALSE"}
+{"PREFIX":"173.251.64.0/24", "AS":"62641", "VALID":"FALSE"}
+{"PREFIX":"173.251.60.0/24", "AS":"16884", "VALID":"FALSE"}
+{"PREFIX":"173.251.54.0/24", "AS":"22225", "VALID":"FALSE"}
+{"PREFIX":"173.251.51.0/24", "AS":"13599", "VALID":"FALSE"}
+{"PREFIX":"173.251.43.0/24", "AS":"18914", "VALID":"FALSE"}
+{"PREFIX":"173.251.39.0/24", "AS":"15312", "VALID":"FALSE"}
+{"PREFIX":"173.251.30.0/24", "AS":"11737", "VALID":"FALSE"}
+{"PREFIX":"173.251.28.0/24", "AS":"14564", "VALID":"FALSE"}
+{"PREFIX":"173.251.19.0/24", "AS":"32696", "VALID":"FALSE"}
+{"PREFIX":"173.251.112.0/24", "AS":"53751", "VALID":"FALSE"}
+{"PREFIX":"173.251.111.0/24", "AS":"53475", "VALID":"FALSE"}
+{"PREFIX":"173.251.110.0/24", "AS":"62751", "VALID":"FALSE"}
 	</textarea>
 </div>
 <input type="button" onclick="processDowngrades()" value="Process Downgrades" style="width : 100%">
@@ -186,20 +196,20 @@ function Render(){
 
 	this.drawCircleFill = function(point, color){
 		var ctx = this.ctx;
-		var radius = 2;
+		var radius = 10;
 
 		ctx.beginPath();
 		ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI, false);
 		ctx.fillStyle = color;
 		ctx.fill();
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = color;
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
 		ctx.stroke();
 	};
 
 
 
-	this.drawCircleOutline =  function(point){
+	this.drawCircleOutline =  function(point, color){
 		var ctx = this.ctx;
 
 		var radius = 2;
@@ -291,7 +301,7 @@ function getQueryString(){
 }
 
 
-function computeWindow(newDowngrades, ip, slash){
+function computeWindow(newDowngrades, routes, ip, slash){
 	var downgrades = newDowngrades
 
 	var w = []
@@ -308,6 +318,23 @@ function computeWindow(newDowngrades, ip, slash){
 
 		for (var i = 0; i < Math.pow(2, level); i++){
 			var color = null;
+			var circle = null;
+
+			for (var r in routes){
+				var route = routes[r];
+
+				if ( route.slash == (level+slash) ){
+
+					var octet = route.ip.slash24Int() & mask;
+
+					//TODO: add code to edge case non-octet prefixes
+					if ( octet == node ){
+						circle = route.valid;
+					}
+
+				}
+
+			}
 
 			for(var d in downgrades){
 
@@ -329,7 +356,7 @@ function computeWindow(newDowngrades, ip, slash){
 				 	else if( startOctet <= node  && node <= endOctet ) color = downgrade.type;
 				}
 			}	
-			w.push(color);
+			w.push( [color,circle] );
 
 			node = node + inc;
 		}
@@ -339,9 +366,9 @@ function computeWindow(newDowngrades, ip, slash){
 }
 
 
-function display(intervals, triIP, triSlash){
+function display(intervals, routes, triIP, triSlash){
 
-	w = computeWindow(intervals, triIP, triSlash);
+	var w = computeWindow(intervals, routes, triIP, triSlash);
 
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
@@ -353,14 +380,14 @@ function display(intervals, triIP, triSlash){
 
 	for (var t in w){
 
-		if (w[triNum] == "V2U"){
+		if (w[triNum][0] == "V2U"){
 			console.assert(triangles[t]!=null);
 			r.drawTriangleFill(triangles[t], colorV2U);
 
-		} else 	if (w[triNum] == "U2I"){
+		} else 	if (w[triNum][0] == "U2I"){
 			console.assert(triangles[t]!=null);
 			r.drawTriangleFill(triangles[t], colorU2I);
-		} else 	if (w[triNum] == "V2I"){
+		} else 	if (w[triNum][0] == "V2I"){
 			console.assert(triangles[t]!=null);
 			r.drawTriangleFill(triangles[t], colorV2I);
 
@@ -369,7 +396,12 @@ function display(intervals, triIP, triSlash){
 			r.drawTriangleOutline(triangles[t] );
 		}	
 
-	// 	//r.drawCircleFill( triangles[t].top, "grey" );
+		if (w[triNum][1] != null){
+			if ( w[triNum][1] == "TRUE" )
+				r.drawCircleFill( triangles[t].top, "green" );
+			else
+				r.drawCircleFill( triangles[t].top, "blue" );
+		}
 
 		triNum++;
 	} 
@@ -384,15 +416,18 @@ function getPrefixIntervalSet(downgrade){
 	for (i in effects){
 
 		var effect = effects[i];
-		var slash = parseInt(effect.split("/")[1]);
+		var slash = parseInt(effect.split("/")[1])-8;
 		var range = effect.split(" ")[0];
 
 		if (range != "empty"){
 
 			var aStr = range.split("-")[0].replace("[", "");
 			var bStr = range.split("-")[1].replace("]", "");
-			var ipA = new IP(Number(aStr.split(".")[0]), Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]));
-			var ipB = new IP(Number(bStr.split(".")[0]), Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]));
+			// var ipA = new IP(Number(aStr.split(".")[0]), Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]));
+			// var ipB = new IP(Number(bStr.split(".")[0]), Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]));
+
+			var ipA = new IP(Number(aStr.split(".")[1]), Number(aStr.split(".")[2]), Number(aStr.split(".")[3]), Number(0));
+			var ipB = new IP(Number(bStr.split(".")[1]), Number(bStr.split(".")[2]), Number(bStr.split(".")[3]), Number(0));
 
 			intervals.push( new Interval(ipA, ipB, slash, type) );
 		}
@@ -428,15 +463,29 @@ function displayTable( data ){
 
 }
 
+
+function Route(jsonRoute){	
+	this.slash = parseInt(jsonRoute['PREFIX'].split("/")[1])-8;
+	var prefixStr = jsonRoute['PREFIX'].split("/")[0];
+
+
+	this.ip = new IP(Number(prefixStr.split(".")[1]), Number(prefixStr.split(".")[2]), Number(prefixStr.split(".")[3]), Number(0));
+
+	this.AS = jsonRoute['AS'];
+	this.valid = jsonRoute['VALID'];
+}
+
+
 function processDowngrades(){
 
-	var json = $("#json-input").val().split("\n");
+	var json = $("#json-downgrades-input").val().split("\n");
 
 	var input = [];
 	for( j in json ){		
 		if( isBlank( json[j] ) ) continue;
 		input.push( jQuery.parseJSON( json[j] ) );
 	}
+
 
 	intervals = [];
 	var triIP = null;
@@ -462,8 +511,16 @@ function processDowngrades(){
 
 	}
 
+
+	var json = $("#json-route-input").val().split("\n");
+	var routes = []
+	for( j in json ){		
+		if( isBlank( json[j] ) ) continue;
+		routes.push( new Route( jQuery.parseJSON( json[j] ) ) );
+	}
+
 	displayTable(tableOutput);
-	display(intervals, triIP, triSlash);
+	display(intervals, routes, triIP, triSlash);
 }
 
 //var triangles = buildTriangles();
