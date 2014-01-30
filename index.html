@@ -62,11 +62,17 @@
 
 $("#cyber").scrollLeft(2000);
 
-var colorV2U = "#6FFF00";
-var colorU2I = "#FE0001";
-var colorV2I = "#FFFF00";
-var lineColor= "#CC00CC";
-var bgColor = "#303032";
+var colorV2U = "#606060";
+var colorU2I = "#000000";
+var colorV2I = "#787878";
+var colorValid = "#A0A0A0";
+var lineColor= "#A0A0A0";
+var bgColor = "#FFFFFF";
+var colorVroutes = "#A0A0A0";
+var colorVroutesLine = "#000000";
+var colorNVroutes = "#000000";//"A0A0A0";
+var colorNVroutesLine = "#FFFFFF";
+
 
 function P(x, y){
 	this.x = x;
@@ -135,7 +141,10 @@ function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
 	var xWidth = 1400;
+	//var xWidth = 2000;
+
 	var yHeight = 700;
+	//var yHeight = 400;
 
 	this.ctx.fillStyle   = bgColor; // set canvas background color
 	this.ctx.fillRect(0,   0, xWidth, yHeight);  // now fill the canvas
@@ -148,29 +157,49 @@ function Render(){
 		var textYMargin= 35;
 		var fontsize = 18;
 
-		this.ctx.fillStyle=colorV2U;
-		this.ctx.fillRect(legendXOffset,legendYMargin,legendSize,legendSize);
 
-		this.ctx.font=fontsize.toString()+"px Arial";
-		this.ctx.fillText(" - Valid to Invalid", legendXOffset + legendSize, textYMargin);
+
+
+
+
 
 		this.ctx.fillStyle=colorU2I;
-		this.ctx.fillRect(legendXOffset + 170,legendYMargin,legendSize,legendSize);
+		this.ctx.fillRect(50,30,legendSize,legendSize);
 
+
+		this.ctx.fillStyle="000000";
 		this.ctx.font=fontsize.toString()+"px Arial";
-		this.ctx.fillText(" - Unknown to Invalid", legendXOffset + legendSize + 170, textYMargin);
+		this.ctx.fillText(" - Unknown to Invalid", 70, 45);
 
 		this.ctx.fillStyle=colorV2I;
-		this.ctx.fillRect(legendXOffset + 375,legendYMargin,legendSize,legendSize);
+		this.ctx.strokeRect(50,60,legendSize,legendSize);
 
+		this.ctx.fillStyle="000000";
 		this.ctx.font=fontsize.toString()+"px Arial";
-		this.ctx.fillText(" - Valid to Invalid", legendXOffset + legendSize + 375, textYMargin);
+		this.ctx.fillText(" - Unknown", 70, 75);
+
+
+		this.ctx.fillStyle=colorVroutes;
+		this.drawCircleFill(new P(60, 100), colorVroutes, colorVroutesLine );
+
+		this.ctx.fillStyle="000000";
+		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillText(" - Valid Route", 70, 105);
+
+		this.drawCircleFill(new P(60, 128), colorNVroutes, "#000000" );
+
+		this.ctx.fillStyle="000000";
+		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillText(" - Invalid Route", 70, 135);
+
+
 	}
 
 
 	this.drawTriangleOutline = function(t){
 		var ctx = this.ctx;
 
+		ctx.lineWidth = 1;
 		ctx.strokeStyle = lineColor;//"red";
 		ctx.beginPath();
 		ctx.moveTo(t.top.x, t.top.y);
@@ -184,6 +213,17 @@ function Render(){
 	this.drawTriangleFill = function(t, color){
 		var ctx = this.ctx;
 
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = color;//"red";
+		ctx.beginPath();
+		ctx.moveTo(t.top.x, t.top.y);
+		ctx.lineTo(t.left.x, t.left.y);
+		ctx.lineTo(t.right.x, t.right.y);
+
+		ctx.lineTo(t.top.x, t.top.y);
+		ctx.stroke();
+
+
 		ctx.fillStyle = color;//"red";
 		ctx.beginPath();
 		ctx.moveTo(t.top.x, t.top.y);
@@ -194,16 +234,16 @@ function Render(){
 		ctx.fill();
 	};
 
-	this.drawCircleFill = function(point, color){
+	this.drawCircleFill = function(point, color, linecolor){
 		var ctx = this.ctx;
-		var radius = 10;
+		var radius = 4;
 
 		ctx.beginPath();
 		ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI, false);
 		ctx.fillStyle = color;
 		ctx.fill();
 		ctx.lineWidth = 2;
-		ctx.strokeStyle = "black";
+		ctx.strokeStyle = linecolor;
 		ctx.stroke();
 	};
 
@@ -225,11 +265,11 @@ function Render(){
 
 
 function buildTriangles(){
-	var y_step = 35;
+	var y_step = 25;
 	//var max_depth = 8;
-	var max_depth = 17;
+	var max_depth = 17-8;
 	var t_height = y_step*max_depth;
-	var width = 5;
+	var width = 20;
 	var t_side_len = Math.sqrt( width*3/4*Math.pow(t_height,2) );
 	var x_trans = 50;
 	var y_trans = 50;
@@ -307,7 +347,7 @@ function computeWindow(newDowngrades, routes, ip, slash){
 	var w = []
 	var ds = [];
 
-	depth = 17;//maxlen-slash;
+	depth = 17-8;//maxlen-slash;
 
 	for (var level = 0; level < depth; level++){
 		var mask = (0xFFFF ^ (0xFFFF >> level));
@@ -378,6 +418,8 @@ function display(intervals, routes, triIP, triSlash){
 
 	var triNum = 0;
 
+	var cirlesToDraw = []; // draw circles last so they are on top
+
 	for (var t in w){
 
 		if (w[triNum][0] == "V2U"){
@@ -397,14 +439,20 @@ function display(intervals, routes, triIP, triSlash){
 		}	
 
 		if (w[triNum][1] != null){
-			if ( w[triNum][1] == "TRUE" )
-				r.drawCircleFill( triangles[t].top, "green" );
-			else
-				r.drawCircleFill( triangles[t].top, "blue" );
+			if ( w[triNum][1] == "TRUE" ){
+				cirlesToDraw.push( [triangles[t].top, colorVroutes, colorVroutesLine] )
+			} else {
+				cirlesToDraw.push( [triangles[t].top, colorNVroutes, colorNVroutesLine] )
+			}
 		}
 
 		triNum++;
 	} 
+
+	for (var c in cirlesToDraw){
+		var circle = cirlesToDraw[c]
+		r.drawCircleFill( circle[0], circle[1], circle[2] );
+	}
 }
 
 function getPrefixIntervalSet(downgrade){
@@ -529,9 +577,23 @@ processDowngrades();
 var stop = Date.now();
 console.log("time = "+(stop-start)/1000);
 
+// document.getElementById('canvas').getContext('2d');
+var canvas = $("#canvas")[0];
+var img = canvas.toDataURL("pdf");
+
+$("#image").html('<img src="'+img+'"/>');
+
+console.log(img);
+
 
 </script>
 
+
+
+<div id="image">
+</div>
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
 
 </body>
 </html>
