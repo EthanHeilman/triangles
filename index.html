@@ -26,7 +26,7 @@
 {"PREFIX":"173.251.110.0/24", "AS":"62751", "VALID":"FALSE"}
 	</textarea>
 </div>
-<input type="button" onclick="processDowngrades()" value="Process Downgrades" style="width : 100%">
+<input type="button" onclick="ProcessDowngrades()" value="Process Downgrades" style="width : 100%">
 
 
 
@@ -54,10 +54,61 @@
 
 <script type="text/javascript">
 
+
+// Event to process input and trigger rewrites.
+function ProcessDowngrades(){
+	var jsonDowngrades = $("#json-downgrades-input").val().split("\n");
+
+	var input = ParseJson(jsonDowngrades);
+
+	var triIP = null;
+	if ($("#octet").val() != "") triIP =  new IP(parseInt($("#octet").val()), 0, 0, 0);
+
+	var tableOutput = [];
+	for (d in input){
+		var downgrade = input[d];
+		var intervalSet = getPrefixIntervalSet(downgrade);
+
+		for (i in intervalSet){
+			var interval = intervalSet[i];
+			var row = [downgrade["CHANGE"], interval.toString(), downgrade["ROA"]["AS"], downgrade["ROA"]["PATH"]];
+
+			if (triIP == null) {
+				triIP = new IP(interval.a.x1, 0, 0, 0);
+			}
+
+			tableOutput.push(row);
+			intervals.push(interval);
+		}
+
+	}
+	displayTable(tableOutput);
+
+	var jsonRoutes = $("#json-route-input").val().split("\n");
+	var routes = []
+	for( j in jsonRoutes ){		
+		if( isBlank( jsonRoutes[j] ) ) continue;
+		routes.push( new Route( jQuery.parseJSON( jsonRoutes[j] ) ) );
+	}
+	
+	var canvas = document.getElementById('canvas').getContext('2d');
+
+
+	Display(canvas, intervals, routes, triIP, triSlash);
+}
+
+
+
+
+
 var start = Date.now();
-var obj = processDowngrades();
+var obj = ProcessDowngrades();
 var stop = Date.now();
 console.log("time = "+(stop-start)/1000);
+
+
+
+
 
 // document.getElementById('canvas').getContext('2d');
 

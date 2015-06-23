@@ -1,13 +1,15 @@
 var colorV2U = "#606060";
 var colorU2I = "#000000";
 var colorV2I = "#787878";
+var colorU   = "#FFFFFF"
 var colorValid = "#A0A0A0";
 var lineColor= "#A0A0A0";
 var bgColor = "#FFFFFF";
 var colorVroutes = "#A0A0A0";
 var colorVroutesLine = "#000000";
-var colorNVroutes = "#000000";//"A0A0A0";
+var colorNVroutes = "#000000";
 var colorNVroutesLine = "#FFFFFF";
+var textcolor = "#000000"
 
 
 function P(x, y){
@@ -72,7 +74,6 @@ function Triangle(top, left, right){
 	}
 }
 
-
 function Render(){
 	this.ctx = document.getElementById('canvas').getContext('2d');
 
@@ -93,40 +94,33 @@ function Render(){
 		var textYMargin= 35;
 		var fontsize = 18;
 
-
+		this.ctx.lineWidth = 1;
 
 		this.ctx.fillStyle=colorU2I;
 		this.ctx.fillRect(50,30,legendSize,legendSize);
-
-
-		this.ctx.fillStyle="000000";
+		this.ctx.fillStyle=textcolor;
 		this.ctx.font=fontsize.toString()+"px Arial";
 		this.ctx.fillText(" - Unknown to Invalid", 70, 45);
 
-		this.ctx.fillStyle=colorV2I;
+		this.ctx.fillStyle = colorU;
+		this.ctx.strokeStyle = lineColor;
 		this.ctx.strokeRect(50,60,legendSize,legendSize);
-
-
-		this.ctx.fillStyle="000000";
-
-
 		this.ctx.font=fontsize.toString()+"px Arial";
+		this.ctx.fillStyle=textcolor;
 		this.ctx.fillText(" - Unknown", 70, 75);
-		this.ctx.strokeStyle = "A0A0A0";
 
 		this.ctx.fillStyle=colorVroutes;
 		this.drawCircleFill(new P(60, 100), colorVroutes, colorVroutesLine );
-
-		this.ctx.fillStyle="000000";
+		this.ctx.fillStyle=textcolor;
 		this.ctx.font=fontsize.toString()+"px Arial";
 		this.ctx.fillText(" - Valid Route", 70, 105);
 
-		this.drawCircleFill(new P(60, 128), colorNVroutes, "#000000" );
+		this.ctx.fillStyle=colorNVroutes;
 
-		this.ctx.fillStyle="000000";
+		this.drawCircleFill(new P(60, 128), colorNVroutes, "#000000" );
+		this.ctx.fillStyle=textcolor;
 		this.ctx.font=fontsize.toString()+"px Arial";
 		this.ctx.fillText(" - Invalid Route", 70, 135);
-
 
 	}
 
@@ -341,36 +335,42 @@ function computeWindow(newDowngrades, routes, ip, slash){
 }
 
 
-function display(intervals, routes, triIP, triSlash){
+
+
+
+function Display(canvas, intervals, routes, triIP, triSlash){
 
 	var w = computeWindow(intervals, routes, triIP, triSlash);
 
-	this.ctx = document.getElementById('canvas').getContext('2d');
+	this.ctx = canvas;
 
-	var r = new Render();
-	r.drawLegend();
+	this.render = new Render();
+
+	this.render.drawLegend();
+
 	var triangles = buildTriangles();
 
 	var triNum = 0;
 
 	var cirlesToDraw = []; // draw circles last so they are on top
 
+
 	for (var t in w){
 
 		if (w[triNum][0] == "V2U"){
 			console.assert(triangles[t]!=null);
-			r.drawTriangleFill(triangles[t], colorV2U);
+			this.render.drawTriangleFill(triangles[t], colorV2U);
 
 		} else 	if (w[triNum][0] == "U2I"){
 			console.assert(triangles[t]!=null);
-			r.drawTriangleFill(triangles[t], colorU2I);
+			this.render.drawTriangleFill(triangles[t], colorU2I);
 		} else 	if (w[triNum][0] == "V2I"){
 			console.assert(triangles[t]!=null);
-			r.drawTriangleFill(triangles[t], colorV2I);
+			this.render.drawTriangleFill(triangles[t], colorV2I);
 
 		} else {
 			console.assert(triangles[t]!=null)
-			r.drawTriangleOutline(triangles[t] );
+			this.render.drawTriangleOutline(triangles[t] );
 		}	
 
 		if (w[triNum][1] != null){
@@ -386,7 +386,7 @@ function display(intervals, routes, triIP, triSlash){
 
 	for (var c in cirlesToDraw){
 		var circle = cirlesToDraw[c]
-		r.drawCircleFill( circle[0], circle[1], circle[2] );
+		this.render.drawCircleFill( circle[0], circle[1], circle[2] );
 	}
 }
 
@@ -459,49 +459,12 @@ function Route(jsonRoute){
 }
 
 
-function processDowngrades(){
-
-	var json = $("#json-downgrades-input").val().split("\n");
-
+function ParseJson(json){
 	var input = [];
 	for( j in json ){		
 		if( isBlank( json[j] ) ) continue;
 		input.push( jQuery.parseJSON( json[j] ) );
 	}
-
-
-	intervals = [];
-	var triIP = null;
-	if ($("#octet").val() != "") triIP =  new IP(parseInt($("#octet").val()), 0, 0, 0);
-
-	var tableOutput = [];
-
-	for (d in input){
-		var downgrade = input[d];
-		var intervalSet = getPrefixIntervalSet(downgrade);
-
-		for (i in intervalSet){
-			var interval = intervalSet[i];
-			var row = [downgrade["CHANGE"], interval.toString(), downgrade["ROA"]["AS"], downgrade["ROA"]["PATH"]];
-
-			if (triIP == null) {
-				triIP = new IP(interval.a.x1, 0, 0, 0);
-			}
-
-			tableOutput.push(row);
-			intervals.push(interval);
-		}
-
-	}
-
-
-	var json = $("#json-route-input").val().split("\n");
-	var routes = []
-	for( j in json ){		
-		if( isBlank( json[j] ) ) continue;
-		routes.push( new Route( jQuery.parseJSON( json[j] ) ) );
-	}
-
-	displayTable(tableOutput);
-	display(intervals, routes, triIP, triSlash);
+	return input;
 }
+
